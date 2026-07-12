@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AssetFlow – Resource Booking</title>
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+<script src="js/api.js"></script>
+<script src="js/auth.js"></script>
+<script>
+let resources = [], bookings = [], message = '', currentUser = null;
+
+async function loadData() {
+  [resources, bookings] = await Promise.all([api.get('/resources'), api.get('/bookings')]);
+  render();
+}
+
+const resourceName = (id) => resources.find(r => r.id === Number(id))?.name || `#${id}`;
+
+function render() {
+  const rows = bookings.map(b => `
+    <tr>
+      <td>${resourceName(b.resource_id)}</td>
+      <td style="color:rgba(43,42,40,0.6)">${new Date(b.start_time).toLocaleString()}</td>
+      <td style="color:rgba(43,42,40,0.6)">${new Date(b.end_time).toLocaleString()}</td>
+      <td>${badge(b.status)}</td>
+      <td>${(b.status === 'Confirmed' && (isAdmin(currentUser) || b.booked_by === currentUser.id)) ? `<button onclick="cancelBooking(${b.id})" style="color:var(--coraldark); font-weight:600; background:none; border:none; cursor:pointer;">Cancel</button>` : ''}</td>
+    </tr>`).join('');
+
+  document.querySelector('main.content').innerHTML = `
+    <div class="page-header"><div><h1>Resource Booking</h1><p>Reserve meeting rooms, vehicles and equipment — conflict-free.</p></div></div>
+    ${alertBox(message, 'error')}
+    <form id="bookForm" class="card" style="display:grid; grid-template-columns:2fr 1fr 1fr; gap:12px; align-items:end; margin-bottom:32px;">
+      <div><label>Resource</label><select id="resource_id" required><option value="">Select...</option>${resources.map(r => `<option value="${r.id}">${r.name} (${r.type})</option>`).join('')}</select></div>
+      <div><label>Start</label><input type="datetime-local" id="start_time" required /></div>
+      <div><label>End</label><input type="datetime-local" id="end_time" required /></div>
+      <button class="btn-primary" style="grid-column: span 3;">Book a Slot</button>
+    </form>
+    <div class="card" style="padding:0; overflow:hidden;">
+      <table><thead><tr><th>Resource</th><th>Start</th><th>End</th><th>Status</th><th></th></tr></thead><tbody>${rows}</tbody></table>
+    </div>
+  `;
+  document.getElementById('bookForm').addEventListener('submit', book);
+}
+
+async function book(e) {
+  e.preventDefault();
+  try {
+    const res = await api.post('/bookings', {
+      resource_id: document.getElementById('resource_id').value,
+      booked_by: currentUser.id,
+      start_time: document.getElementById('start_time').value,
+      end_time: document.getElementById('end_time').value,
+    });
+    message = res.message;
+  } catch (err) { message = err.message; }
+  await loadData();
+}
+
+window.cancelBooking = async function (id) {
+  await api.put(`/bookings/${id}/cancel`);
+  await loadData();
+};
+
+(async function () {
+  const user = await guardPage('bookings.html', '<p style="color:rgba(43,42,40,0.5)">Loading...</p>');
+  if (!user) return;
+  currentUser = user;
+  await loadData();
+})();
+</script>
+</body>
+</html>

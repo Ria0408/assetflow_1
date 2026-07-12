@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AssetFlow – Dashboard</title>
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+<script src="js/api.js"></script>
+<script src="js/auth.js"></script>
+<script>
+(async function () {
+  const user = await guardPage('dashboard.html', '<p style="color:rgba(43,42,40,0.5)">Loading overview...</p>');
+  if (!user) return;
+
+  const summary = await api.get('/dashboard/summary');
+  const firstName = user.name.split(' ')[0];
+
+  const statCard = (label, value, colorVar) => `
+    <div class="card">
+      <div class="stat-label">${label}</div>
+      <div class="stat-value" style="color:${colorVar || 'var(--ink)'}">${value ?? '—'}</div>
+    </div>`;
+
+  const overdueAlert = summary.overdue_returns > 0
+    ? `<div class="alert alert-error" style="font-weight:600;">${summary.overdue_returns} asset${summary.overdue_returns > 1 ? 's are' : ' is'} overdue for return — flagged for follow-up.</div>`
+    : '';
+
+  const activityItems = summary.recent_activity.length
+    ? summary.recent_activity.map(log => `
+        <li style="font-size:0.88rem; border-top:1px solid var(--line); padding:10px 0;">
+          <span style="font-weight:600;">${log.action}</span>
+          <span style="color:rgba(43,42,40,0.4);"> · ${new Date(log.created_at).toLocaleString()}</span>
+        </li>`).join('')
+    : '<p style="color:rgba(43,42,40,0.4); font-size:0.88rem;">No recent activity yet.</p>';
+
+  document.querySelector('main.content').innerHTML = `
+    <div class="page-header">
+      <div><h1>Hey ${firstName} 👋</h1><p>Here's what's happening across your organization today.</p></div>
+    </div>
+    <div class="grid-4" style="margin-bottom:16px;">
+      ${statCard('Total Assets', summary.total_assets)}
+      ${statCard('Available', summary.available, 'var(--sage)')}
+      ${statCard('Allocated', summary.allocated, 'var(--coraldark)')}
+      ${statCard('Under Maintenance', summary.under_maintenance)}
+    </div>
+    <div class="grid-3" style="margin-bottom:24px;">
+      ${statCard('Active Bookings', summary.active_bookings)}
+      ${statCard('Pending Maintenance', summary.pending_maintenance)}
+      ${statCard('Pending Transfers', summary.pending_transfers)}
+    </div>
+    ${overdueAlert}
+    <div class="card">
+      <h3 style="margin-top:0;">Recent Activity</h3>
+      <ul style="list-style:none; padding:0; margin:0;">${activityItems}</ul>
+    </div>
+  `;
+})();
+</script>
+</body>
+</html>

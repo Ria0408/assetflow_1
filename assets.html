@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AssetFlow – Assets</title>
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+<script src="js/api.js"></script>
+<script src="js/auth.js"></script>
+<script>
+let assets = [];
+let showForm = false;
+let message = '';
+let currentUser = null;
+
+async function loadAssets(search = '') {
+  assets = await api.get('/assets' + (search ? `?search=${encodeURIComponent(search)}` : ''));
+  render();
+}
+
+function render() {
+  const rows = assets.length ? assets.map(a => `
+    <tr>
+      <td style="font-weight:600;">${a.asset_tag}</td>
+      <td>${a.name}</td>
+      <td style="color:rgba(43,42,40,0.6)">${a.location || ''}</td>
+      <td style="color:rgba(43,42,40,0.6)">${a.condition}</td>
+      <td>${badge(a.status)}</td>
+    </tr>`).join('') : `<tr><td colspan="5" style="text-align:center; color:rgba(43,42,40,0.4); padding:24px;">No assets found.</td></tr>`;
+
+  const admin = isAdmin(currentUser);
+  const formHtml = (admin && showForm) ? `
+    <form id="registerForm" class="card" style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:24px;">
+      <input id="asset_tag" placeholder="Asset tag (e.g. AF-1050)" required />
+      <input id="name" placeholder="Asset name" required />
+      <input id="serial_number" placeholder="Serial number" />
+      <input id="location" placeholder="Location" />
+      <input id="purchase_cost" type="number" placeholder="Purchase cost" />
+      <button class="btn-primary" style="grid-column: span 2;">Register Asset</button>
+    </form>` : '';
+
+  document.querySelector('main.content').innerHTML = `
+    <div class="page-header">
+      <div><h1>Assets</h1><p>Everything your organization owns, in one directory.</p></div>
+      ${admin ? '<button class="btn-primary" id="toggleFormBtn">+ Register Asset</button>' : ''}
+    </div>
+    ${alertBox(message, 'success')}
+    ${formHtml}
+    <input id="searchInput" placeholder="Search by tag, name or serial..." style="max-width:420px; margin-bottom:20px;" />
+    <div class="card" style="padding:0; overflow:hidden;">
+      <table>
+        <thead><tr><th>Tag</th><th>Name</th><th>Location</th><th>Condition</th><th>Status</th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>
+  `;
+
+  const toggleBtn = document.getElementById('toggleFormBtn');
+  if (toggleBtn) toggleBtn.addEventListener('click', () => { showForm = !showForm; render(); });
+  document.getElementById('searchInput').addEventListener('input', (e) => loadAssets(e.target.value));
+  const regForm = document.getElementById('registerForm');
+  if (regForm) regForm.addEventListener('submit', registerAsset);
+}
+
+async function registerAsset(e) {
+  e.preventDefault();
+  const payload = {
+    asset_tag: document.getElementById('asset_tag').value,
+    name: document.getElementById('name').value,
+    serial_number: document.getElementById('serial_number').value,
+    location: document.getElementById('location').value,
+    purchase_cost: document.getElementById('purchase_cost').value || undefined,
+  };
+  try {
+    const res = await api.post('/assets', payload);
+    message = res.message;
+    showForm = false;
+    await loadAssets();
+  } catch (err) {
+    message = err.message;
+    render();
+  }
+}
+
+(async function () {
+  const user = await guardPage('assets.html', '<p style="color:rgba(43,42,40,0.5)">Loading...</p>');
+  if (!user) return;
+  currentUser = user;
+  await loadAssets();
+})();
+</script>
+</body>
+</html>

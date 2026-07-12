@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AssetFlow – Notifications</title>
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+<script src="js/api.js"></script>
+<script src="js/auth.js"></script>
+<script>
+let notifications = [], filter = 'All';
+const dotColor = { Alert: 'var(--coral)', Info: 'var(--sage)', Warning: 'var(--sun)' };
+
+async function loadData() {
+  notifications = await api.get('/notifications');
+  render();
+}
+
+function render() {
+  const filtered = filter === 'All' ? notifications : notifications.filter(n => n.category === filter);
+  const tabs = ['All', 'Alert', 'Info', 'Warning'].map(f => `<button class="tab-btn ${f === filter ? 'active' : ''}" onclick="setFilter('${f}')">${f}</button>`).join('');
+
+  const rows = filtered.length ? filtered.map(n => `
+    <div style="display:flex; align-items:center; gap:12px; padding:16px 20px; border-top:1px solid var(--line); ${n.is_read ? 'opacity:0.5;' : ''}">
+      <span style="width:8px; height:8px; border-radius:50%; background:${dotColor[n.category] || 'rgba(43,42,40,0.3)'}; flex-shrink:0;"></span>
+      <div style="flex:1;">
+        <p style="font-size:0.9rem; margin:0;">${n.message}</p>
+        <p style="font-size:0.75rem; color:rgba(43,42,40,0.4); margin:2px 0 0;">${new Date(n.created_at).toLocaleString()}</p>
+      </div>
+      ${!n.is_read ? `<button onclick="markRead(${n.id})" style="font-size:0.75rem; font-weight:600; color:var(--coraldark); background:none; border:none; cursor:pointer;">Mark read</button>` : ''}
+    </div>`).join('') : `<p style="padding:24px; color:rgba(43,42,40,0.4); font-size:0.9rem;">You're all caught up.</p>`;
+
+  document.querySelector('main.content').innerHTML = `
+    <div class="page-header"><div><h1>Notifications</h1><p>Everything that needs your attention.</p></div></div>
+    <div class="tabs">${tabs}</div>
+    <div class="card" style="padding:0; overflow:hidden;">${rows}</div>
+  `;
+}
+
+window.setFilter = function (f) { filter = f; render(); };
+window.markRead = async function (id) {
+  await api.put(`/notifications/${id}/read`);
+  await loadData();
+};
+
+(async function () {
+  const user = await guardPage('notifications.html', '<p style="color:rgba(43,42,40,0.5)">Loading...</p>');
+  if (!user) return;
+  await loadData();
+})();
+</script>
+</body>
+</html>

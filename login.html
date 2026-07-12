@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AssetFlow – Log in</title>
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+<div class="auth-shell">
+  <div class="auth-side dark">
+    <div class="brand"><span class="badge-circle">A</span>AssetFlow</div>
+    <div>
+      <h1>Every asset,<br>accounted for.</h1>
+      <p style="color:rgba(255,255,255,0.6); max-width:320px;">Track laptops, rooms, vehicles and everything in between — without the spreadsheet chaos.</p>
+    </div>
+    <p style="color:rgba(255,255,255,0.4); font-size:0.85rem;">Welcome back. Good to see you.</p>
+  </div>
+
+  <div class="auth-form-wrap">
+    <div class="auth-form">
+      <h2>Log in</h2>
+      <p class="sub">Use your work email to continue.</p>
+      <div id="alertBox"></div>
+      <form id="loginForm">
+        <div class="field">
+          <label>Email</label>
+          <input type="email" id="email" placeholder="name@company.com" required />
+        </div>
+        <div class="field">
+          <label>Password</label>
+          <input type="password" id="password" placeholder="••••••••" required />
+        </div>
+        <button type="submit" class="btn-primary" style="width:100%;" id="submitBtn">Log in</button>
+      </form>
+      <p style="font-size:0.9rem; color:rgba(43,42,40,0.5); margin-top:20px;">
+        New here? <a href="signup.html" style="color:var(--coraldark); font-weight:600;">Create an account</a>
+      </p>
+    </div>
+  </div>
+</div>
+
+<script src="js/api.js"></script>
+<script>
+document.getElementById('loginForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const submitBtn = document.getElementById('submitBtn');
+  const alertBox = document.getElementById('alertBox');
+  alertBox.innerHTML = '';
+  submitBtn.textContent = 'Logging in...';
+  submitBtn.disabled = true;
+  try {
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    const data = await api.post('/auth/login', { email, password });
+    localStorage.setItem('assetflow_token', data.token);
+    window.location.href = 'dashboard.html';
+  } catch (err) {
+    alertBox.innerHTML = `<div class="alert alert-error">${err.message}</div>`;
+    submitBtn.textContent = 'Log in';
+    submitBtn.disabled = false;
+    // If the account still needs email verification, send them to signup's
+    // verify step so they can finish it.
+    if (err.requiresVerification) {
+      sessionStorage.setItem('assetflow_pending_email', err.email || document.getElementById('email').value);
+      window.location.href = 'signup.html';
+    }
+  }
+});
+
+// Already logged in? skip straight to dashboard.
+if (localStorage.getItem('assetflow_token')) {
+  window.location.href = 'dashboard.html';
+}
+</script>
+</body>
+</html>

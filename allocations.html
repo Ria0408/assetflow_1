@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AssetFlow – Allocation & Transfer</title>
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+<script src="js/api.js"></script>
+<script src="js/auth.js"></script>
+<script>
+let allocations = [], transfers = [], assets = [], users = [], message = '';
+let currentUser = null;
+
+async function loadData() {
+  [allocations, transfers, assets, users] = await Promise.all([
+    api.get('/allocations'), api.get('/transfers'), api.get('/assets'), api.get('/users')
+  ]);
+  render();
+}
+
+const nameFor = (id) => users.find(u => u.id === Number(id))?.name || `#${id}`;
+const tagFor = (id) => assets.find(a => a.id === Number(id))?.asset_tag || `#${id}`;
+const assetOptions = () => assets.map(a => `<option value="${a.id}">${a.asset_tag} — ${a.name}</option>`).join('');
+const userOptions = () => users.map(u => `<option value="${u.id}">${u.name}</option>`).join('');
+
+function render() {
+  const allocRows = allocations.map(a => `
+    <tr>
+      <td>${tagFor(a.asset_id)}</td>
+      <td>${nameFor(a.employee_id)}</td>
+      <td style="color:rgba(43,42,40,0.6)">${a.expected_return_date || '—'}</td>
+      <td>${badge(a.status)}</td>
+    </tr>`).join('');
+
+  const admin = isAdmin(currentUser);
+  const transferRows = transfers.map(t => `
+    <tr>
+      <td>${tagFor(t.asset_id)}</td>
+      <td>${nameFor(t.from_employee_id)} → ${nameFor(t.to_employee_id)}</td>
+      <td>${badge(t.status)}</td>
+      <td>${(admin && t.status === 'Pending')
+        ? `<button onclick="decideTransfer(${t.id}, 'Approved')" style="color:var(--sage); font-weight:600; background:none; border:none; cursor:pointer; margin-right:8px;">Approve</button>
+           <button onclick="decideTransfer(${t.id}, 'Rejected')" style="color:var(--coraldark); font-weight:600; background:none; border:none; cursor:pointer;">Reject</button>`
+        : `<span style="color:rgba(43,42,40,0.3); font-size:0.8rem;">—</span>`}</td>
+    </tr>`).join('');
+
+  const allocateFormHtml = admin ? `
+      <form id="allocateForm" class="card stack">
+        <h3 style="margin:0;">Allocate an asset</h3>
+        <select id="alloc_asset" required><option value="">Select asset...</option>${assetOptions()}</select>
+        <select id="alloc_employee" required><option value="">Select employee...</option>${userOptions()}</select>
+        <button class="btn-primary">Allocate</button>
+      </form>` : '';
+
+  document.querySelector('main.content').innerHTML = `
+    <div class="page-header"><div><h1>Allocation & Transfer</h1><p>Assign assets to people, and hand them off without conflicts.</p></div></div>
+    ${alertBox(message, 'error')}
+    <div class="grid-2" style="margin-bottom:32px;">
+      ${allocateFormHtml}
+      <form id="transferForm" class="card stack">
+        <h3 style="margin:0;">Submit a transfer request</h3>
+        <select id="t_asset" required><option value="">Asset...</option>${assetOptions()}</select>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+          <select id="t_from" required><option value="">From...</option>${userOptions()}</select>
+          <select id="t_to" required><option value="">To...</option>${userOptions()}</select>
+        </div>
+        <textarea id="t_reason" placeholder="Reason"></textarea>
+        <button class="btn-primary">Submit Request</button>
+      </form>
+    </div>
+    <h3>Active Allocations</h3>
+    <div class="card" style="padding:0; overflow:hidden; margin-bottom:32px;">
+      <table><thead><tr><th>Asset</th><th>Employee</th><th>Expected Return</th><th>Status</th></tr></thead><tbody>${allocRows}</tbody></table>
+    </div>
+    <h3>Transfer Requests</h3>
+    <div class="card" style="padding:0; overflow:hidden;">
+      <table><thead><tr><th>Asset</th><th>From → To</th><th>Status</th><th>Action</th></tr></thead><tbody>${transferRows}</tbody></table>
+    </div>
+  `;
+
+  const allocateForm = document.getElementById('allocateForm');
+  if (allocateForm) allocateForm.addEventListener('submit', allocate);
+  document.getElementById('transferForm').addEventListener('submit', requestTransfer);
+}
+
+async function allocate(e) {
+  e.preventDefault();
+  try {
+    const res = await api.post('/allocations', {
+      asset_id: document.getElementById('alloc_asset').value,
+      employee_id: document.getElementById('alloc_employee').value,
+    });
+    message = res.message;
+  } catch (err) { message = err.message; }
+  await loadData();
+}
+
+async function requestTransfer(e) {
+  e.preventDefault();
+  try {
+    const res = await api.post('/transfers', {
+      asset_id: document.getElementById('t_asset').value,
+      from_employee_id: document.getElementById('t_from').value,
+      to_employee_id: document.getElementById('t_to').value,
+      reason: document.getElementById('t_reason').value,
+    });
+    message = res.message;
+  } catch (err) { message = err.message; }
+  await loadData();
+}
+
+window.decideTransfer = async function (id, status) {
+  await api.put(`/transfers/${id}/status`, { status });
+  await loadData();
+};
+
+(async function () {
+  const user = await guardPage('allocations.html', '<p style="color:rgba(43,42,40,0.5)">Loading...</p>');
+  if (!user) return;
+  currentUser = user;
+  await loadData();
+})();
+</script>
+</body>
+</html>

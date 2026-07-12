@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AssetFlow – Maintenance</title>
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+<script src="js/api.js"></script>
+<script src="js/auth.js"></script>
+<script>
+const STAGES = ['Pending', 'Approved', 'Technician Assigned', 'In Progress', 'Resolved'];
+let requests = [], assets = [], message = '', currentUser = null;
+
+async function loadData() {
+  [requests, assets] = await Promise.all([api.get('/maintenance'), api.get('/assets')]);
+  render();
+}
+
+const tagFor = (id) => assets.find(a => a.id === Number(id))?.asset_tag || `#${id}`;
+
+function priorityBadgeStyle(p) {
+  if (p === 'High') return 'badge-coral';
+  if (p === 'Medium') return 'badge-yellow';
+  return 'badge-gray';
+}
+
+function render() {
+  const admin = isAdmin(currentUser);
+  const columns = STAGES.map(stage => {
+    const cards = requests.filter(r => r.stage === stage).map(r => `
+      <div class="card" style="padding:12px; ${admin ? 'cursor:pointer;' : ''} margin-bottom:12px;" ${admin ? `onclick="advance(${r.id}, '${r.stage}')" title="Click to advance"` : ''}>
+        <p style="font-weight:600; font-size:0.88rem; margin:0 0 4px;">${tagFor(r.asset_id)}</p>
+        <p style="font-size:0.8rem; color:rgba(43,42,40,0.6); margin:0 0 8px;">${r.issue_description}</p>
+        <span class="badge ${priorityBadgeStyle(r.priority)}">${r.priority}</span>
+      </div>`).join('');
+    return `<div>
+      <p style="font-size:0.75rem; font-weight:600; color:rgba(43,42,40,0.5); text-transform:uppercase; letter-spacing:0.02em; margin-bottom:8px;">${stage}</p>
+      ${cards}
+    </div>`;
+  }).join('');
+
+  document.querySelector('main.content').innerHTML = `
+    <div class="page-header"><div><h1>Maintenance Management</h1><p>Raise → Approve → Assign → Repair → Resolved.</p></div></div>
+    ${alertBox(message, 'success')}
+    <form id="raiseForm" class="card" style="display:grid; grid-template-columns:1fr 2fr 1fr; gap:12px; align-items:end; margin-bottom:32px;">
+      <div><label>Asset</label><select id="asset_id" required><option value="">Asset...</option>${assets.map(a => `<option value="${a.id}">${a.asset_tag} — ${a.name}</option>`).join('')}</select></div>
+      <div><label>Issue</label><input id="issue_description" placeholder="Issue description" required /></div>
+      <div><label>Priority</label><select id="priority"><option>Low</option><option selected>Medium</option><option>High</option></select></div>
+      <button class="btn-primary" style="grid-column: span 3;">Raise Request</button>
+    </form>
+    <div style="display:grid; grid-template-columns:repeat(5, 1fr); gap:16px;">${columns}</div>
+    ${admin ? '<p style="font-size:0.75rem; color:rgba(43,42,40,0.4); margin-top:16px;">Tip: click a card to move it to the next stage.</p>' : ''}
+  `;
+  document.getElementById('raiseForm').addEventListener('submit', raise);
+}
+
+async function raise(e) {
+  e.preventDefault();
+  try {
+    const res = await api.post('/maintenance', {
+      asset_id: document.getElementById('asset_id').value,
+      issue_description: document.getElementById('issue_description').value,
+      priority: document.getElementById('priority').value,
+      raised_by: currentUser.id,
+    });
+    message = res.message;
+  } catch (err) { message = err.message; }
+  await loadData();
+}
+
+window.advance = async function (id, currentStage) {
+  const idx = STAGES.indexOf(currentStage);
+  if (idx === STAGES.length - 1) return;
+  await api.put(`/maintenance/${id}/stage`, { stage: STAGES[idx + 1] });
+  await loadData();
+};
+
+(async function () {
+  const user = await guardPage('maintenance.html', '<p style="color:rgba(43,42,40,0.5)">Loading...</p>');
+  if (!user) return;
+  currentUser = user;
+  await loadData();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AssetFlow – Audit</title>
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+<script src="js/api.js"></script>
+<script src="js/auth.js"></script>
+<script>
+let cycles = [], departments = [], assets = [], message = '';
+
+async function loadData() {
+  [cycles, departments, assets] = await Promise.all([api.get('/audits/cycles'), api.get('/departments'), api.get('/assets')]);
+  render();
+}
+
+const deptName = (id) => departments.find(d => d.id === Number(id))?.name || `#${id}`;
+
+function render() {
+  const rows = cycles.map(c => `
+    <tr>
+      <td>#${c.id}</td>
+      <td>${deptName(c.department_id)}</td>
+      <td style="color:rgba(43,42,40,0.6)">${c.start_date} → ${c.end_date}</td>
+      <td>${badge(c.status)}</td>
+      <td>${c.status === 'Open' ? `<button onclick="closeCycle(${c.id})" style="color:var(--coraldark); font-weight:600; background:none; border:none; cursor:pointer;">Close Cycle</button>` : ''}</td>
+    </tr>`).join('');
+
+  document.querySelector('main.content').innerHTML = `
+    <div class="page-header"><div><h1>Asset Audit</h1><p>Run audit cycles, verify assets, auto-generate discrepancy reports.</p></div></div>
+    ${alertBox(message, 'warn')}
+    <div class="grid-2" style="margin-bottom:32px;">
+      <form id="cycleForm" class="card stack">
+        <h3 style="margin:0;">Start an audit cycle</h3>
+        <select id="c_department" required><option value="">Department...</option>${departments.map(d => `<option value="${d.id}">${d.name}</option>`).join('')}</select>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+          <input type="date" id="c_start" required />
+          <input type="date" id="c_end" required />
+        </div>
+        <button class="btn-primary">Create Audit Cycle</button>
+      </form>
+      <form id="itemForm" class="card stack">
+        <h3 style="margin:0;">Record a verification</h3>
+        <select id="i_cycle" required><option value="">Audit cycle...</option>${cycles.map(c => `<option value="${c.id}">#${c.id} — ${deptName(c.department_id)}</option>`).join('')}</select>
+        <select id="i_asset" required><option value="">Asset...</option>${assets.map(a => `<option value="${a.id}">${a.asset_tag} — ${a.name}</option>`).join('')}</select>
+        <input id="i_location" placeholder="Reported location" />
+        <select id="i_verification"><option>Verified</option><option>Missing</option><option>Damaged</option></select>
+        <button class="btn-primary">Save Verification</button>
+      </form>
+    </div>
+    <div class="card" style="padding:0; overflow:hidden;">
+      <table><thead><tr><th>Cycle</th><th>Department</th><th>Window</th><th>Status</th><th></th></tr></thead><tbody>${rows}</tbody></table>
+    </div>
+  `;
+  document.getElementById('cycleForm').addEventListener('submit', createCycle);
+  document.getElementById('itemForm').addEventListener('submit', addItem);
+}
+
+async function createCycle(e) {
+  e.preventDefault();
+  try {
+    const res = await api.post('/audits/cycles', {
+      department_id: document.getElementById('c_department').value,
+      start_date: document.getElementById('c_start').value,
+      end_date: document.getElementById('c_end').value,
+    });
+    message = res.message;
+  } catch (err) {
+    message = err.message;
+  }
+  await loadData();
+}
+
+async function addItem(e) {
+  e.preventDefault();
+  try {
+    await api.post('/audits/items', {
+      audit_cycle_id: document.getElementById('i_cycle').value,
+      asset_id: document.getElementById('i_asset').value,
+      reported_location: document.getElementById('i_location').value,
+      verification: document.getElementById('i_verification').value,
+    });
+    message = 'Item recorded.';
+  } catch (err) {
+    message = err.message;
+  }
+  await loadData();
+}
+
+window.closeCycle = async function (id) {
+  try {
+    const res = await api.put(`/audits/cycles/${id}/close`);
+    message = res.message;
+  } catch (err) {
+    message = err.message;
+  }
+  await loadData();
+};
+
+(async function () {
+  const user = await guardPage('audits.html', '<p style="color:rgba(43,42,40,0.5)">Loading...</p>', { requireAdmin: true });
+  if (!user) return;
+  await loadData();
+})();
+</script>
+</body>
+</html>

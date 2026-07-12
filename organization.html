@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AssetFlow – Organization</title>
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+<script src="js/api.js"></script>
+<script src="js/auth.js"></script>
+<script>
+let departments = [], categories = [], users = [];
+let activeTab = 'Departments';
+let message = '';
+
+async function loadData() {
+  [departments, categories, users] = await Promise.all([
+    api.get('/departments'), api.get('/categories'), api.get('/users')
+  ]);
+  render();
+}
+
+function render() {
+  const tabs = ['Departments', 'Categories', 'Employees'];
+  const tabsHtml = tabs.map(t => `<button class="tab-btn ${t === activeTab ? 'active' : ''}" onclick="setTab('${t}')">${t}</button>`).join('');
+
+  const addForm = activeTab !== 'Employees' ? `
+    <form id="addForm" style="display:flex; gap:8px; max-width:420px; margin-bottom:20px;">
+      <input id="newName" placeholder="New ${activeTab === 'Departments' ? 'department' : 'category'} name" required />
+      <button class="btn-primary" style="flex-shrink:0;">+ Add</button>
+    </form>` : '';
+
+  let tableHtml = '';
+  if (activeTab === 'Departments') {
+    tableHtml = `<table><thead><tr><th>Name</th><th>Status</th></tr></thead><tbody>
+      ${departments.map(d => `<tr><td>${d.name}</td><td>${badge(d.status)}</td></tr>`).join('')}
+    </tbody></table>`;
+  } else if (activeTab === 'Categories') {
+    tableHtml = `<table><thead><tr><th>Name</th></tr></thead><tbody>
+      ${categories.map(c => `<tr><td>${c.name}</td></tr>`).join('')}
+    </tbody></table>`;
+  } else {
+    tableHtml = `<table><thead><tr><th>Name</th><th>Email</th><th>Role</th></tr></thead><tbody>
+      ${users.map(u => `<tr><td>${u.name}</td><td style="color:rgba(43,42,40,0.6)">${u.email}</td><td>${u.role}</td></tr>`).join('')}
+    </tbody></table>`;
+  }
+
+  document.querySelector('main.content').innerHTML = `
+    <div class="page-header"><div><h1>Organization Setup</h1><p>Manage departments, categories and your people.</p></div></div>
+    ${alertBox(message, 'error')}
+    <div class="tabs">${tabsHtml}</div>
+    ${addForm}
+    <div class="card" style="padding:0; overflow:hidden;">${tableHtml}</div>
+  `;
+
+  const form = document.getElementById('addForm');
+  if (form) form.addEventListener('submit', addItem);
+}
+
+window.setTab = function (t) { activeTab = t; render(); };
+
+async function addItem(e) {
+  e.preventDefault();
+  const name = document.getElementById('newName').value.trim();
+  if (!name) return;
+  try {
+    if (activeTab === 'Departments') await api.post('/departments', { name, status: 'Active' });
+    if (activeTab === 'Categories') await api.post('/categories', { name });
+    message = '';
+    await loadData();
+  } catch (err) {
+    message = err.message;
+    render();
+  }
+}
+
+(async function () {
+  const user = await guardPage('organization.html', '<p style="color:rgba(43,42,40,0.5)">Loading...</p>', { requireAdmin: true });
+  if (!user) return;
+  await loadData();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AssetFlow – Sign up</title>
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+<div class="auth-shell">
+  <div class="auth-side green">
+    <div class="brand"><span class="badge-circle">A</span>AssetFlow</div>
+    <div>
+      <h1>Join your<br>organization.</h1>
+      <p style="color:rgba(255,255,255,0.75); max-width:320px;">Sign up creates a standard employee account. An admin can promote your role later.</p>
+    </div>
+    <p style="color:rgba(255,255,255,0.5); font-size:0.85rem;">Takes less than a minute.</p>
+  </div>
+
+  <div class="auth-form-wrap">
+    <div class="auth-form" id="authFormWrap">
+      <!-- Step content is injected by JS below (signup form, then optional OTP step). -->
+    </div>
+  </div>
+</div>
+
+<script src="js/api.js"></script>
+<script>
+const wrap = document.getElementById('authFormWrap');
+const prefillEmail = sessionStorage.getItem('assetflow_pending_email') || '';
+
+function renderSignupStep() {
+  wrap.innerHTML = `
+    <h2>Create account</h2>
+    <p class="sub">You'll start as an Employee.</p>
+    <div id="alertBox"></div>
+    <form id="signupForm">
+      <div class="field">
+        <label>Full name</label>
+        <input type="text" id="name" placeholder="Jane Doe" required />
+      </div>
+      <div class="field">
+        <label>Email</label>
+        <input type="email" id="email" placeholder="name@company.com" value="${prefillEmail}" required />
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <input type="password" id="password" placeholder="At least 6 characters" minlength="6" required />
+      </div>
+      <button type="submit" class="btn-primary" style="width:100%;" id="submitBtn">Create account</button>
+    </form>
+    <p style="font-size:0.9rem; color:rgba(43,42,40,0.5); margin-top:20px;">
+      Already have an account? <a href="login.html" style="color:var(--coraldark); font-weight:600;">Log in</a>
+    </p>
+  `;
+
+  document.getElementById('signupForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const submitBtn = document.getElementById('submitBtn');
+    const alertBox = document.getElementById('alertBox');
+    alertBox.innerHTML = '';
+    submitBtn.textContent = 'Creating account...';
+    submitBtn.disabled = true;
+    try {
+      const name = document.getElementById('name').value;
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const data = await api.post('/auth/signup', { name, email, password });
+
+      if (data.requiresVerification) {
+        // Email service is configured on the backend — show the OTP step.
+        renderVerifyStep(data.email);
+      } else {
+        // No email service configured — account is already active.
+        localStorage.setItem('assetflow_token', data.token);
+        sessionStorage.removeItem('assetflow_pending_email');
+        window.location.href = 'dashboard.html';
+      }
+    } catch (err) {
+      alertBox.innerHTML = `<div class="alert alert-error">${err.message}</div>`;
+      submitBtn.textContent = 'Create account';
+      submitBtn.disabled = false;
+    }
+  });
+}
+
+function renderVerifyStep(email) {
+  wrap.innerHTML = `
+    <h2>Check your email</h2>
+    <p class="sub">We sent a 6-digit code to <strong>${email}</strong>.</p>
+    <div id="alertBox"></div>
+    <form id="verifyForm">
+      <div class="field">
+        <label>Verification code</label>
+        <input type="text" id="code" placeholder="123456" maxlength="6" required />
+      </div>
+      <button type="submit" class="btn-primary" style="width:100%;" id="verifyBtn">Verify & continue</button>
+    </form>
+  `;
+
+  document.getElementById('verifyForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const verifyBtn = document.getElementById('verifyBtn');
+    const alertBox = document.getElementById('alertBox');
+    alertBox.innerHTML = '';
+    verifyBtn.textContent = 'Verifying...';
+    verifyBtn.disabled = true;
+    try {
+      const code = document.getElementById('code').value.trim();
+      const data = await api.post('/auth/verify-email', { email, code });
+      localStorage.setItem('assetflow_token', data.token);
+      sessionStorage.removeItem('assetflow_pending_email');
+      window.location.href = 'dashboard.html';
+    } catch (err) {
+      alertBox.innerHTML = `<div class="alert alert-error">${err.message}</div>`;
+      verifyBtn.textContent = 'Verify & continue';
+      verifyBtn.disabled = false;
+    }
+  });
+}
+
+// If we arrived here from a login attempt on an unverified account, skip
+// straight to the OTP step instead of the signup form.
+if (prefillEmail && sessionStorage.getItem('assetflow_pending_email')) {
+  renderVerifyStep(prefillEmail);
+} else {
+  renderSignupStep();
+}
+</script>
+</body>
+</html>
