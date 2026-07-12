@@ -1,0 +1,41 @@
+id,user_id,action,entity_type,entity_id,previous_value,updated_value,created_at
+1,8,Booking confirmed,MaintenanceRequest,15,,,2026-06-25 06:00:00
+2,2,Department created,MaintenanceRequest,46,,,2026-07-12 13:00:00
+3,13,Maintenance request raised,Department,32,,,2026-07-10 12:00:00
+4,17,Booking confirmed,Booking,56,,,2026-06-16 04:00:00
+5,4,Booking confirmed,MaintenanceRequest,1,,,2026-06-18 14:00:00
+6,14,Audit item marked,Department,5,,,2026-07-08 04:00:00
+7,11,Booking confirmed,MaintenanceRequest,42,,,2026-06-30 08:00:00
+8,18,Transfer approved,Booking,41,,,2026-06-17 10:00:00
+9,18,Asset registered,AuditItem,5,,,2026-07-07 15:00:00
+10,10,Asset updated,Asset,28,,,2026-06-22 20:00:00
+11,4,Transfer approved,Department,45,,,2026-06-18 20:00:00
+12,2,Department created,Asset,19,,,2026-06-24 00:00:00
+13,14,Asset updated,Department,34,,,2026-06-26 11:00:00
+14,6,Asset updated,Department,6,,,2026-06-28 18:00:00
+15,20,Maintenance request raised,Department,32,,,2026-07-04 12:00:00
+16,8,Transfer approved,Booking,30,,,2026-07-03 04:00:00
+17,1,Audit item marked,MaintenanceRequest,58,,,2026-06-23 21:00:00
+18,18,Asset updated,Asset,29,,,2026-06-24 21:00:00
+19,10,Maintenance request raised,MaintenanceRequest,45,,,2026-06-26 18:00:00
+20,10,Asset updated,MaintenanceRequest,55,,,2026-06-23 14:00:00
+21,8,Transfer approved,AuditItem,23,,,2026-06-30 03:00:00
+22,10,Asset registered,MaintenanceRequest,18,,,2026-07-03 09:00:00
+23,2,Booking confirmed,MaintenanceRequest,54,,,2026-06-15 18:00:00
+24,20,Audit item marked,Booking,15,,,2026-06-24 07:00:00
+25,20,Department created,Department,41,,,2026-07-05 06:00:00
+26,2,Department created,MaintenanceRequest,3,,,2026-06-18 20:00:00
+27,5,Asset registered,Booking,21,,,2026-07-03 11:00:00
+28,6,Asset updated,Department,51,,,2026-07-08 13:00:00
+29,17,Booking confirmed,Booking,54,,,2026-07-02 11:00:00
+30,16,Audit item marked,Booking,48,,,2026-06-20 08:00:00
+31,4,Transfer approved,Asset,10,,,2026-07-12 10:00:00
+32,13,Audit item marked,AuditItem,24,,,2026-07-09 07:00:00
+33,1,Department created,AuditItem,8,,,2026-06-17 12:00:00
+34,9,Booking confirmed,MaintenanceRequest,53,,,2026-06-29 11:00:00
+35,4,Maintenance request raised,Department,31,,,2026-07-05 11:00:00
+36,18,Department created,AuditItem,15,,,2026-06-15 19:00:00
+37,15,Maintenance request raised,Booking,42,,,2026-07-05 02:00:00
+38,5,Asset registered,Asset,20,,,2026-06-28 03:00:00
+39,4,Asset updated,AuditItem,9,,,2026-06-30 03:00:00
+40,12,Maintenance request raised,AuditItem,27,,,2026-06-27 14:00:00

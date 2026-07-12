@@ -1,0 +1,21 @@
+id,name,email,password_hash,role,department_id,created_at
+1,Priya Shah,priya.shah@company.com,$2b$12$placeholderHashDoNotUseInProd1,Admin,1,2026-01-07 00:00:00
+2,Arjun Nair,arjun.nair@company.com,$2b$12$placeholderHashDoNotUseInProd2,AssetManager,3,2026-02-27 00:00:00
+3,Aditi Rao,aditi.rao@company.com,$2b$12$placeholderHashDoNotUseInProd3,DepartmentHead,2,2026-01-27 00:00:00
+4,Rohan Mehta,rohan.mehta@company.com,$2b$12$placeholderHashDoNotUseInProd4,DepartmentHead,5,2026-01-23 00:00:00
+5,Zara Iqbal,zara.iqbal@company.com,$2b$12$placeholderHashDoNotUseInProd5,DepartmentHead,5,2026-04-19 00:00:00
+6,Kabir Singh,kabir.singh@company.com,$2b$12$placeholderHashDoNotUseInProd6,DepartmentHead,1,2026-01-08 00:00:00
+7,Neha Verma,neha.verma@company.com,$2b$12$placeholderHashDoNotUseInProd7,DepartmentHead,1,2026-02-25 00:00:00
+8,Sameer Khan,sameer.khan@company.com,$2b$12$placeholderHashDoNotUseInProd8,Employee,2,2026-06-04 00:00:00
+9,Ishita Gupta,ishita.gupta@company.com,$2b$12$placeholderHashDoNotUseInProd9,Employee,1,2026-02-20 00:00:00
+10,Devansh Rao,devansh.rao@company.com,$2b$12$placeholderHashDoNotUseInProd10,Employee,5,2026-02-26 00:00:00
+11,Meera Pillai,meera.pillai@company.com,$2b$12$placeholderHashDoNotUseInProd11,Employee,4,2026-03-13 00:00:00
+12,Yash Kapoor,yash.kapoor@company.com,$2b$12$placeholderHashDoNotUseInProd12,AssetManager,1,2026-06-28 00:00:00
+13,Ananya Joshi,ananya.joshi@company.com,$2b$12$placeholderHashDoNotUseInProd13,Employee,4,2026-03-13 00:00:00
+14,Rahul Bose,rahul.bose@company.com,$2b$12$placeholderHashDoNotUseInProd14,AssetManager,2,2026-03-28 00:00:00
+15,Tanvi Desai,tanvi.desai@company.com,$2b$12$placeholderHashDoNotUseInProd15,AssetManager,1,2026-04-08 00:00:00
+16,Vivek Menon,vivek.menon@company.com,$2b$12$placeholderHashDoNotUseInProd16,Employee,1,2026-03-30 00:00:00
+17,Sana Sheikh,sana.sheikh@company.com,$2b$12$placeholderHashDoNotUseInProd17,Employee,5,2026-01-12 00:00:00
+18,Aman Chawla,aman.chawla@company.com,$2b$12$placeholderHashDoNotUseInProd18,Employee,4,2026-02-01 00:00:00
+19,Riya Kulkarni,riya.kulkarni@company.com,$2b$12$placeholderHashDoNotUseInProd19,AssetManager,4,2026-05-22 00:00:00
+20,Farhan Ali,farhan.ali@company.com,$2b$12$placeholderHashDoNotUseInProd20,Employee,3,2026-06-08 00:00:00

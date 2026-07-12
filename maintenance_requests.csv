@@ -1,0 +1,13 @@
+id,asset_id,raised_by,issue_description,priority,technician,stage,created_at,resolved_at
+1,16,16,Monitor flickering,Medium,J. Varne,In Progress,2026-07-02 00:00:00,
+2,51,8,Router losing connection intermittently,High,K. Rao,Pending,2026-06-06 00:00:00,
+3,16,16,Laptop battery draining fast,Medium,K. Rao,Technician Assigned,2026-07-08 00:00:00,
+4,48,9,Chair armrest broken,Medium,S. Thomas,Resolved,2026-06-22 00:00:00,2026-07-06 00:00:00
+5,15,4,Forklift leaks oil,Low,K. Rao,Pending,2026-06-13 00:00:00,
+6,14,4,"Printer jam, parts ordered",Medium,K. Rao,In Progress,2026-06-18 00:00:00,
+7,15,1,Forklift leaks oil,Medium,K. Rao,Technician Assigned,2026-06-12 00:00:00,
+8,3,5,Monitor flickering,Low,K. Rao,Pending,2026-07-06 00:00:00,
+9,56,16,Monitor flickering,Medium,K. Rao,Pending,2026-07-07 00:00:00,
+10,22,16,AC unit noisy compressor,Low,K. Rao,Approved,2026-06-04 00:00:00,
+11,26,5,Forklift leaks oil,High,,In Progress,2026-06-05 00:00:00,
+12,20,18,Router losing connection intermittently,High,,Pending,2026-06-16 00:00:00,

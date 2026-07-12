@@ -1,114 +1,86 @@
-[npm-image]: https://img.shields.io/npm/v/mysql2.svg
-[npm-url]: https://npmjs.com/package/mysql2
-[node-version-image]: https://img.shields.io/node/v/mysql2.svg
-[node-version-url]: https://nodejs.org/en/download
-[downloads-image]: https://img.shields.io/npm/dm/mysql2.svg
-[downloads-url]: https://npmjs.com/package/mysql2
-[license-url]: https://github.com/sidorares/node-mysql2/blob/master/License
-[license-image]: https://img.shields.io/npm/l/mysql2.svg?maxAge=2592000
-[node-mysql]: https://github.com/mysqljs/mysql
-[mysqljs]: https://github.com/mysqljs
-[mysql-native]: https://github.com/sidorares/nodejs-mysql-native
-[sidorares]: https://github.com/sidorares
-[TooTallNate]: https://gist.github.com/TooTallNate
-[starttls.js]: https://gist.github.com/TooTallNate/848444
-[node-mariasql]: https://github.com/mscdex/node-mariasql
-[contributors]: https://github.com/sidorares/node-mysql2/graphs/contributors
-[contributing]: https://github.com/sidorares/node-mysql2/blob/master/Contributing.md
-[docs-base]: https://sidorares.github.io/node-mysql2/docs
-[docs-base-zh-CN]: https://sidorares.github.io/node-mysql2/zh-CN/docs
-[docs-base-pt-BR]: https://sidorares.github.io/node-mysql2/pt-BR/docs
-[docs-prepared-statements]: https://sidorares.github.io/node-mysql2/docs/documentation/prepared-statements
-[docs-mysql-server]: https://sidorares.github.io/node-mysql2/docs/documentation/mysql-server
-[docs-promise-wrapper]: https://sidorares.github.io/node-mysql2/docs/documentation/promise-wrapper
-[docs-authentication-switch]: https://sidorares.github.io/node-mysql2/docs/documentation/authentication-switch
-[docs-streams]: https://sidorares.github.io/node-mysql2/docs/documentation/extras
-[docs-typescript-docs]: https://sidorares.github.io/node-mysql2/docs/documentation/typescript-examples
-[docs-qs-pooling]: https://sidorares.github.io/node-mysql2/docs#using-connection-pools
-[docs-qs-first-query]: https://sidorares.github.io/node-mysql2/docs#first-query
-[docs-qs-using-prepared-statements]: https://sidorares.github.io/node-mysql2/docs#using-prepared-statements
-[docs-examples]: https://sidorares.github.io/node-mysql2/docs/examples
-[docs-faq]: https://sidorares.github.io/node-mysql2/docs/faq
-[docs-documentation]: https://sidorares.github.io/node-mysql2/docs/documentation
-[docs-contributing]: https://sidorares.github.io/node-mysql2/docs/contributing/website
-[coverage]: https://img.shields.io/codecov/c/github/sidorares/node-mysql2
-[coverage-url]: https://app.codecov.io/github/sidorares/node-mysql2
-[ci-url]: https://github.com/sidorares/node-mysql2/actions/workflows/ci-coverage.yml?query=branch%3Amaster
-[ci-image]: https://img.shields.io/github/actions/workflow/status/sidorares/node-mysql2/ci-coverage.yml?event=push&style=flat&label=CI&branch=master
+# Nodemailer
 
-# MySQL2
+[![Nodemailer](https://raw.githubusercontent.com/nodemailer/nodemailer/master/assets/nm_logo_200x136.png)](https://nodemailer.com/about/)
 
-[![NPM Version][npm-image]][npm-url]
-[![NPM Downloads][downloads-image]][downloads-url]
-[![Node.js Version][node-version-image]][node-version-url]
-[![GitHub Workflow Status (with event)][ci-image]][ci-url]
-[![Codecov][coverage]][coverage-url]
-[![License][license-image]][license-url]
+Send emails from Node.js – easy as cake! 🍰✉️
 
-[English][docs-base] | [简体中文][docs-base-zh-CN] | [Português (BR)][docs-base-pt-BR]
+[![NPM](https://nodei.co/npm/nodemailer.png?downloads=true&downloadRank=true&stars=true)](https://nodemailer.com/about/)
 
-> MySQL client for Node.js with focus on performance. Supports prepared statements, non-utf8 encodings, binary log protocol, compression, ssl [much more][docs-documentation].
+See [nodemailer.com](https://nodemailer.com/) for documentation and terms.
 
-**Table of Contents**
+> [!TIP]
+> Check out **[EmailEngine](https://emailengine.app/?utm_source=github-nodemailer&utm_campaign=nodemailer&utm_medium=readme-link)** – a self-hosted email gateway that allows making **REST requests against IMAP and SMTP servers**. EmailEngine also sends webhooks whenever something changes on the registered accounts.\
+> \
+> Using the email accounts registered with EmailEngine, you can receive and [send emails](https://emailengine.app/sending-emails?utm_source=github-nodemailer&utm_campaign=nodemailer&utm_medium=readme-link). EmailEngine supports OAuth2, delayed sends, opens and clicks tracking, bounce detection, etc. All on top of regular email accounts without an external MTA service.
 
-- [History and Why MySQL2](#history-and-why-mysql2)
-- [Installation](#installation)
-- [Documentation](#documentation)
-- [Acknowledgements](#acknowledgements)
-- [Contributing](#contributing)
+## Having an issue?
 
-## History and Why MySQL2
+#### First review the docs
 
-MySQL2 project is a continuation of [MySQL-Native][mysql-native]. Protocol parser code was rewritten from scratch and api changed to match popular [Node MySQL][node-mysql]. MySQL2 team is working together with [Node MySQL][node-mysql] team to factor out shared code and move it under [mysqljs][mysqljs] organization.
+Documentation for Nodemailer can be found at [nodemailer.com](https://nodemailer.com/about/).
 
-MySQL2 is mostly API compatible with [Node MySQL][node-mysql] and supports majority of features. MySQL2 also offers these additional features:
+#### Nodemailer throws a SyntaxError for "..."
 
-- Faster / Better Performance
-- [Prepared Statements][docs-prepared-statements]
-- MySQL Binary Log Protocol
-- [MySQL Server][docs-mysql-server]
-- Extended support for Encoding and Collation
-- [Promise Wrapper][docs-promise-wrapper]
-- Compression
-- SSL and [Authentication Switch][docs-authentication-switch]
-- [Custom Streams][docs-streams]
-- [Pooling][docs-qs-pooling]
+You are using an older Node.js version than v6.0. Upgrade Node.js to get support for the spread operator. Nodemailer supports all Node.js versions starting from Node.js@v6.0.0.
 
-## Installation
+#### I'm having issues with Gmail
 
-MySQL2 is free from native bindings and can be installed on Linux, Mac OS or Windows without any issues.
+Gmail either works well, or it does not work at all. It is probably easier to switch to an alternative service instead of fixing issues with Gmail. If Gmail does not work for you, then don't use it. Read more about it [here](https://nodemailer.com/usage/using-gmail/).
 
-```bash
-npm install --save mysql2
+#### I get ETIMEDOUT errors
+
+Check your firewall settings. Timeout usually occurs when you try to open a connection to a firewalled port either on the server or on your machine. Some ISPs also block email ports to prevent spamming.
+
+#### Nodemailer works on one machine but not in another
+
+It's either a firewall issue, or your SMTP server blocks authentication attempts from some servers.
+
+#### I get TLS errors
+
+-   If you are running the code on your machine, check your antivirus settings. Antiviruses often mess around with email ports usage. Node.js might not recognize the MITM cert your antivirus is using.
+-   Latest Node versions allow only TLS versions 1.2 and higher. Some servers might still use TLS 1.1 or lower. Check Node.js docs on how to get correct TLS support for your app. You can change this with [tls.minVersion](https://nodejs.org/dist/latest-v16.x/docs/api/tls.html#tls_tls_createsecurecontext_options) option
+-   You might have the wrong value for the `secure` option. This should be set to `true` only for port 465. For every other port, it should be `false`. Setting it to `false` does not mean that Nodemailer would not use TLS. Nodemailer would still try to upgrade the connection to use TLS if the server supports it.
+-   Older Node versions do not fully support the certificate chain of the newest Let's Encrypt certificates. Either set [tls.rejectUnauthorized](https://nodejs.org/dist/latest-v16.x/docs/api/tls.html#tlsconnectoptions-callback) to `false` to skip chain verification or upgrade your Node version
+
+```
+let configOptions = {
+    host: "smtp.example.com",
+    port: 587,
+    tls: {
+        rejectUnauthorized: true,
+        minVersion: "TLSv1.2"
+    }
+}
 ```
 
-If you are using TypeScript, you will need to install `@types/node`.
+#### I have issues with DNS / hosts file
 
-```bash
-npm install --save-dev @types/node
+Node.js uses [c-ares](https://nodejs.org/en/docs/meta/topics/dependencies/#c-ares) to resolve domain names, not the DNS library provided by the system, so if you have some custom DNS routing set up, it might be ignored. Nodemailer runs [dns.resolve4()](https://nodejs.org/dist/latest-v16.x/docs/api/dns.html#dnsresolve4hostname-options-callback) and [dns.resolve6()](https://nodejs.org/dist/latest-v16.x/docs/api/dns.html#dnsresolve6hostname-options-callback) to resolve hostname into an IP address. If both calls fail, then Nodemailer will fall back to [dns.lookup()](https://nodejs.org/dist/latest-v16.x/docs/api/dns.html#dnslookuphostname-options-callback). If this does not work for you, you can hard code the IP address into the configuration like shown below. In that case, Nodemailer would not perform any DNS lookups.
+
+```
+let configOptions = {
+    host: "1.2.3.4",
+    port: 465,
+    secure: true,
+    tls: {
+        // must provide server name, otherwise TLS certificate check will fail
+        servername: "example.com"
+    }
+}
 ```
 
-> For TypeScript documentation and examples, see [here][docs-typescript-docs].
+#### I have an issue with TypeScript types
 
-## Documentation
+Nodemailer has official support for Node.js only. For anything related to TypeScript, you need to directly contact the authors of the [type definitions](https://www.npmjs.com/package/@types/nodemailer).
 
-- [Quickstart][docs-base]
-  - [First Query][docs-qs-first-query], [Using Prepared Statements][docs-qs-using-prepared-statements], [Using Connection Pools][docs-qs-pooling] and more.
-- [Documentation][docs-documentation]
-- [Examples][docs-examples]
-- [FAQ][docs-faq]
+#### I have a different problem
 
-## Acknowledgements
+If you are having issues with Nodemailer, then the best way to find help would be [Stack Overflow](https://stackoverflow.com/search?q=nodemailer) or revisit the [docs](https://nodemailer.com/about/).
 
-- Internal protocol is written by [@sidorares][sidorares] [MySQL-Native][mysql-native].
-- Constants, SQL parameters interpolation, Pooling, `ConnectionConfig` class taken from [Node MySQL][node-mysql].
-- SSL upgrade code based on [@TooTallNate][TooTallNate] [code][starttls.js].
-- Secure connection / compressed connection api flags compatible to [MariaSQL][node-mariasql] client.
-- [Contributors][contributors].
+### License
 
-## Contributing
+Nodemailer is licensed under the **MIT No Attribution license**
 
-Want to improve something in **MySQL2**?
-Please check [Contributing.md][contributing] for detailed instruction on how to get started.
+---
 
-To contribute in **MySQL2 Documentation**, please visit the [Website Contributing Guidelines][docs-contributing] for detailed instruction on how to get started.
+The Nodemailer logo was designed by [Sven Kristjansen](https://www.behance.net/kristjansen).

@@ -1,0 +1,61 @@
+id,asset_tag,name,category_id,serial_number,purchase_date,purchase_cost,location,condition,status
+1,AF-1001,Forklift,3,SN-85674X,2023-07-16,42318.62,Motor pool,Damaged,Available
+2,AF-1002,Office Chair,2,SN-40512X,2025-06-06,6194.94,Noida office,Fair,Available
+3,AF-1003,Forklift,3,SN-56566X,2023-08-03,40259.98,"Bengaluru, 2nd floor",Fair,Allocated
+4,AF-1004,Camera DSLR,1,SN-42087X,2023-06-17,27816.27,Motor pool,Damaged,Available
+5,AF-1005,HP Laptop,1,SN-40021X,2025-04-21,2071.2,"4th floor, room B2",Good,Available
+6,AF-1006,Company Van,3,SN-84341X,2025-06-16,43117.17,Desk 814,New,Available
+7,AF-1007,Whiteboard,2,SN-28726X,2023-09-29,8506.87,"4th floor, room B2",New,Allocated
+8,AF-1008,Air Conditioner,5,SN-62350X,2024-01-06,13276.35,Desk 814,Good,Retired
+9,AF-1009,HP Laptop,1,SN-24371X,2023-06-06,37702.65,Desk 812,Good,Reserved
+10,AF-1010,Printer,5,SN-60019X,2024-09-02,59767.86,"Bengaluru, 4th floor",Good,Allocated
+11,AF-1011,Camera DSLR,1,SN-44973X,2025-02-26,38511.56,Desk 812,Fair,Available
+12,AF-1012,Whiteboard,2,SN-10425X,2025-01-09,52569.8,Warehouse,Good,Available
+13,AF-1013,Conference Speaker,1,SN-93748X,2024-06-03,36596.87,Warehouse,Good,Available
+14,AF-1014,Water Cooler,5,SN-52487X,2024-05-15,1315.68,"4th floor, room B2",Fair,Lost
+15,AF-1015,HP Laptop,1,SN-41571X,2025-06-18,34106.31,Desk 814,Good,Available
+16,AF-1016,Camera DSLR,1,SN-26483X,2023-05-12,39636.09,Warehouse,Damaged,Lost
+17,AF-1017,Router,4,SN-89507X,2024-03-09,57867.12,Motor pool,Damaged,Lost
+18,AF-1018,Printer,5,SN-98039X,2024-10-27,22499.22,Desk 814,Good,Under Maintenance
+19,AF-1019,Wireless Mouse,4,SN-39451X,2023-03-07,20384.42,Motor pool,Fair,Allocated
+20,AF-1020,Dell Laptop,1,SN-19305X,2024-12-25,37921.51,"Bengaluru, 4th floor",Damaged,Available
+21,AF-1021,Office Chair,2,SN-77391X,2023-09-01,16816.86,Warehouse,New,Available
+22,AF-1022,Wireless Mouse,4,SN-71993X,2025-04-06,24512.54,Desk 812,Damaged,Available
+23,AF-1023,Scanner,5,SN-63883X,2024-04-23,51850.63,"Bengaluru, 2nd floor",Good,Available
+24,AF-1024,Printer,5,SN-54473X,2025-03-30,51721.1,Motor pool,New,Available
+25,AF-1025,Projector,1,SN-65296X,2023-07-07,16820.93,"Bengaluru, 2nd floor",New,Available
+26,AF-1026,Camera DSLR,1,SN-22833X,2023-02-21,39180.87,"Bengaluru, 4th floor",Good,Allocated
+27,AF-1027,Wireless Mouse,4,SN-31798X,2024-02-21,29215.62,Desk 812,Good,Available
+28,AF-1028,Innova Vehicle,3,SN-59672X,2023-01-03,59120.73,Desk 814,Damaged,Available
+29,AF-1029,Scanner,5,SN-82845X,2024-11-08,43146.74,"4th floor, room B2",Fair,Available
+30,AF-1030,HP Laptop,1,SN-85914X,2025-01-23,32600.38,"Bengaluru, 4th floor",Good,Allocated
+31,AF-1031,Air Conditioner,5,SN-72493X,2024-05-29,55175.32,"Bengaluru, 4th floor",Good,Allocated
+32,AF-1032,Innova Vehicle,3,SN-18981X,2024-09-01,4217.46,Desk 812,Good,Under Maintenance
+33,AF-1033,Air Conditioner,5,SN-42271X,2024-08-15,35731.97,Desk 812,Damaged,Allocated
+34,AF-1034,Mechanical Keyboard,4,SN-36772X,2024-11-16,43014.08,Desk 812,Fair,Available
+35,AF-1035,Conference Speaker,1,SN-69929X,2023-11-20,55751.75,"Bengaluru, 4th floor",New,Lost
+36,AF-1036,Water Cooler,5,SN-83792X,2023-04-13,4534.65,"4th floor, room B2",Fair,Available
+37,AF-1037,Forklift,3,SN-19016X,2025-06-19,14770.42,Desk 814,Damaged,Available
+38,AF-1038,Water Cooler,5,SN-95717X,2024-06-25,618.21,"4th floor, room B2",Good,Under Maintenance
+39,AF-1039,Projector,1,SN-44664X,2023-04-29,53399.31,Warehouse,Damaged,Allocated
+40,AF-1040,Conference Speaker,1,SN-89276X,2023-08-04,43099.09,"4th floor, room B2",New,Available
+41,AF-1041,Mechanical Keyboard,4,SN-16658X,2023-04-05,38111.92,"Bengaluru, 4th floor",Good,Under Maintenance
+42,AF-1042,Monitor 24in,1,SN-27146X,2024-10-14,58790.91,Desk 814,New,Available
+43,AF-1043,Camera DSLR,1,SN-11267X,2023-04-25,4653.35,Warehouse,Good,Under Maintenance
+44,AF-1044,Forklift,3,SN-86350X,2024-07-19,9013.41,"4th floor, room B2",Damaged,Available
+45,AF-1045,HP Laptop,1,SN-56898X,2023-08-04,40971.69,Noida office,New,Allocated
+46,AF-1046,Water Cooler,5,SN-30257X,2023-08-31,51896.65,Warehouse,New,Retired
+47,AF-1047,Dell Laptop,1,SN-33509X,2025-01-24,55480.56,Desk 812,Fair,Reserved
+48,AF-1048,Mechanical Keyboard,4,SN-30866X,2025-03-17,42121.5,"Bengaluru, 4th floor",New,Available
+49,AF-1049,Wireless Mouse,4,SN-36158X,2025-04-16,55119.35,Motor pool,Fair,Available
+50,AF-1050,Dell Laptop,1,SN-96511X,2023-07-17,23998.19,"Bengaluru, 2nd floor",Damaged,Available
+51,AF-1051,Forklift,3,SN-94080X,2024-06-05,24070.75,Noida office,Good,Retired
+52,AF-1052,Standing Desk,2,SN-44237X,2023-07-02,34898.3,"Bengaluru, 4th floor",Good,Retired
+53,AF-1053,Water Cooler,5,SN-66959X,2023-12-20,43753.42,"Bengaluru, 2nd floor",New,Available
+54,AF-1054,Air Conditioner,5,SN-34914X,2023-09-18,2806.53,Motor pool,Damaged,Available
+55,AF-1055,Scanner,5,SN-19171X,2024-11-11,55258.14,"Bengaluru, 2nd floor",Damaged,Allocated
+56,AF-1056,Router,4,SN-50538X,2024-11-13,24592.32,"4th floor, room B2",Fair,Available
+57,AF-1057,Company Van,3,SN-65108X,2024-11-11,56430.77,Warehouse,Damaged,Allocated
+58,AF-1058,Printer,5,SN-81819X,2025-05-03,174.3,Desk 812,Damaged,Available
+59,AF-1059,Whiteboard,2,SN-67905X,2024-03-28,40586.29,Warehouse,Good,Allocated
+60,AF-1060,Conference Speaker,1,SN-77561X,2024-11-10,38031.51,Motor pool,Damaged,Available

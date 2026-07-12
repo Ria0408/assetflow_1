@@ -1,0 +1,9 @@
+id,asset_id,from_employee_id,to_employee_id,reason,status,created_at
+1,18,17,16,Requesting device with higher spec,Approved,2026-06-26 00:00:00
+2,5,10,8,Reallocating after project handover,Approved,2026-06-10 00:00:00
+3,58,18,3,Requesting device with higher spec,Pending,2026-05-30 00:00:00
+4,25,5,7,Employee moved to a different department,Approved,2026-06-22 00:00:00
+5,22,18,15,Original holder on long leave,Pending,2026-05-27 00:00:00
+6,54,14,13,Employee moved to a different department,Rejected,2026-06-18 00:00:00
+7,31,1,12,Reallocating after project handover,Approved,2026-06-23 00:00:00
+8,35,18,20,Requesting device with higher spec,Approved,2026-05-29 00:00:00

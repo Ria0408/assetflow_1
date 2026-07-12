@@ -1,0 +1,16 @@
+id,audit_cycle_id,asset_id,reported_location,verification
+1,1,39,"Bengaluru, 2nd floor",Missing
+2,1,51,"4th floor, room B2",Missing
+3,1,40,Warehouse,Verified
+4,1,15,Desk 812,Verified
+5,2,50,Desk 814,Missing
+6,2,34,"4th floor, room B2",Verified
+7,2,25,Desk 814,Damaged
+8,1,29,"4th floor, room B2",Missing
+9,1,53,Motor pool,Verified
+10,1,20,Warehouse,Pending
+11,1,38,"4th floor, room B2",Verified
+12,2,28,Desk 814,Verified
+13,2,59,"4th floor, room B2",Missing
+14,2,37,"Bengaluru, 4th floor",Verified
+15,2,58,"4th floor, room B2",Damaged

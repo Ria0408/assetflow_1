@@ -1,93 +1,129 @@
-import { Pool as BasePool, PoolOptions } from './lib/Pool.js';
-import {
-  Connection as BaseConnection,
-  ConnectionOptions,
-  SslOptions,
-} from './lib/Connection.js';
-import {
-  Query as BaseQuery,
-  QueryOptions,
-  QueryError,
-  ExecuteValues,
-  QueryValues,
-} from './lib/protocol/sequences/Query.js';
-import {
-  PoolCluster as BasePoolCluster,
-  PoolClusterOptions,
-  PoolNamespace,
-} from './lib/PoolCluster.js';
-import {
-  Prepare as BasePrepare,
-  PrepareStatementInfo,
-} from './lib/protocol/sequences/Prepare.js';
-import { Server } from './lib/Server.js';
-import {
-  escape as SqlStringEscape,
-  escapeId as SqlStringEscapeId,
-  format as SqlStringFormat,
-  raw as SqlStringRaw,
-} from 'sql-escaper';
-export type { Raw, SqlValue, Timezone } from 'sql-escaper';
+/* ---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License.
+ *  REQUIREMENT: This definition is dependent on the @types/node definition.
+ *  Install with `npm install @types/node --save-dev`
+ *-------------------------------------------------------------------------------------------- */
 
-export {
-  ConnectionOptions,
-  SslOptions,
-  PoolOptions,
-  PoolClusterOptions,
-  PoolNamespace,
-  QueryOptions,
-  QueryError,
-  ExecuteValues,
-  QueryValues,
-  PrepareStatementInfo,
-};
+/* ---------------------------------------------------------------------------------------------
+ * This file provides detailed typings for the public API of iconv-lite
+ *-------------------------------------------------------------------------------------------- */
 
-export * from './lib/protocol/packets/index.js';
-export * from './lib/Auth.js';
-export * from './lib/constants/index.js';
-export * from './lib/parsers/index.js';
-export * from './lib/Connection.js';
-export * from './lib/PoolConnection.js';
+import type Stream = require("stream")
+import type { Encoding } from "../types/encodings"
 
-// Expose class interfaces
-export interface Pool extends BasePool {}
-export interface PoolCluster extends BasePoolCluster {}
-export interface Query extends BaseQuery {}
-export interface Prepare extends BasePrepare {}
+declare namespace iconv {
+  export interface DecodeOptions {
+    /**
+     * Strip the Byte Order Mark (BOM) from the input,
+     * when decoding, if the codec is BOM-aware. @default true
+     */
+    stripBOM?: boolean;
+    /** Override the default endianness for `UTF-16` and `UTF-32` decodings. */
+    defaultEncoding?: "utf16be" | "utf32be";
+  }
 
-export function createConnection(connectionUri: string): BaseConnection;
-export function createConnection(config: ConnectionOptions): BaseConnection;
+  export interface EncodeOptions {
+    /**
+     * Add a Byte Order Mark (BOM) to the output, when encoding,
+     * if the codec is BOM-aware. @default false
+     */
+    addBOM?: boolean;
+    /** Override the default endianness for `UTF-32` encoding. */
+    defaultEncoding?: "utf32be";
+  }
 
-export function createPool(connectionUri: string): BasePool;
-export function createPool(config: PoolOptions): BasePool;
+  export interface EncoderStream {
+    write(str: string): Buffer;
+    end(): Buffer | undefined;
+  }
 
-export function createPoolCluster(config?: PoolClusterOptions): PoolCluster;
+  export interface DecoderStream {
+    write(buf: Buffer): string;
+    end(): string | undefined;
+  }
 
-export const escape: typeof SqlStringEscape;
-export const escapeId: typeof SqlStringEscapeId;
-export const format: typeof SqlStringFormat;
-export const raw: typeof SqlStringRaw;
-
-export interface ConnectionConfig extends ConnectionOptions {
-  mergeFlags(defaultFlags: string[], userFlags: string[] | string): number;
-  getDefaultFlags(options?: ConnectionOptions): string[];
-  getCharsetNumber(charset: string): number;
-  getSSLProfile(name: string): { ca: string[] };
-  parseUrl(url: string): {
-    host: string;
-    port: number;
-    database: string;
-    user: string;
-    password: string;
+  export interface Codec {
+    encoder: new (options?: EncodeOptions, codec?: Codec) => EncoderStream;
+    decoder: new (options?: DecodeOptions, codec?: Codec) => DecoderStream;
+    bomAware?: boolean;
     [key: string]: any;
-  };
+  }
+
+  /** Encodes a `string` into a `Buffer`, using the provided `encoding`. */
+  export function encode (content: string, encoding: Encoding, options?: EncodeOptions): Buffer
+
+  /** Decodes a `Buffer` into a `string`, using the provided `encoding`. */
+  export function decode (buffer: Buffer | Uint8Array, encoding: Encoding, options?: DecodeOptions): string
+
+  /** Checks if a given encoding is supported by `iconv-lite`. */
+  export function encodingExists (encoding: string): encoding is Encoding
+
+  /** Legacy alias for {@link iconv.encode}. */
+  export const toEncoding: typeof iconv.encode
+
+  /** Legacy alias for {@link iconv.decode}. */
+  export const fromEncoding: typeof iconv.decode
+
+  /** Creates a stream that decodes binary data from a given `encoding` into strings. */
+  export function decodeStream (encoding: Encoding, options?: DecodeOptions): NodeJS.ReadWriteStream
+
+  /** Creates a stream that encodes strings into binary data in a given `encoding`. */
+  export function encodeStream (encoding: Encoding, options?: EncodeOptions): NodeJS.ReadWriteStream
+
+  /**
+   * Explicitly enable Streaming API in browser environments by passing in:
+   * ```js
+   * require('stream')
+   * ```
+   * @example iconv.enableStreamingAPI(require('stream'));
+   */
+  export function enableStreamingAPI (stream_module: { Transform: typeof Stream.Transform }): void
+
+  /** Creates and returns a low-level encoder stream. */
+  export function getEncoder (encoding: Encoding, options?: EncodeOptions): EncoderStream
+
+  /** Creates and returns a low-level decoder stream. */
+  export function getDecoder (encoding: Encoding, options?: DecodeOptions): DecoderStream
+
+  /**
+   * Returns a codec object for the given `encoding`.
+   * @throws If the `encoding` is not recognized.
+   */
+  export function getCodec (encoding: Encoding): Codec
+
+  /** Strips all non-alphanumeric characters and appended year from `encoding`. */
+  export function _canonicalizeEncoding (encoding: Encoding): string
+
+  /** A cache of all loaded encoding definitions. */
+  export let encodings: Record<
+    Encoding,
+    | string
+    | {
+      type: string;
+      [key: string]: any;
+    }
+  > | null
+
+  /** A cache of initialized codec objects. */
+  export let _codecDataCache: Record<string, Codec>
+
+  /** The character used for untranslatable `Unicode` characters. @default "�" */
+  export let defaultCharUnicode: string
+
+  /** The character used for untranslatable `single-byte` characters. @default "?" */
+  export let defaultCharSingleByte: string
+
+  /**
+   * Skip deprecation warning when strings are used instead of Buffers during decoding.
+   * Note: {@link iconv.decode} converts the string to Buffer regardless.
+   */
+  export let skipDecodeWarning: boolean
+
+  /** @readonly Whether or not, Streaming API is enabled. */
+  export const supportsStreams: boolean
+
+  export type { iconv as Iconv, Encoding }
 }
 
-export function createServer(handler: (conn: BaseConnection) => any): Server;
-
-export type {
-  QueryTraceContext,
-  ExecuteTraceContext,
-  ConnectTraceContext,
-  PoolConnectTraceContext,
-} from './lib/Tracing.js';
+export = iconv

@@ -1,0 +1,6 @@
+id,name,head_id,parent_dept_id,status
+1,Engineering,3,,Active
+2,Facilities,4,,Active
+3,Field Ops (East),5,2,Inactive
+4,Human Resources,6,,Active
+5,Finance,7,,Active
